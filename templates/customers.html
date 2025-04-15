@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1 class="display-5">
+            <i class="fas fa-users"></i> Customer Management
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-list"></i> Customers List
+            </div>
+            <div class="card-body">
+                {% if customers %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for customer in customers %}
+                            <tr>
+                                <td>{{ customer.customer_id }}</td>
+                                <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                                <td>{{ customer.phone_number }}</td>
+                                <td>{{ customer.email }}</td>
+                                <!-- Replace the action buttons section with just view buttons -->
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <!-- Delete and edit buttons removed -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    No customers found. Add your first customer!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-user-plus"></i> Add New Customer
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_customer') }}">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="col">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Add Customer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

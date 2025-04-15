@@ -1,0 +1,74 @@
+/* Custom Styles for Sahara Readymade Store Management */
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    font-weight: 600;
+}
+
+.table th {
+    font-weight: 600;
+    color: #495057;
+}
+
+.btn {
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.form-control, .form-select {
+    border-radius: 5px;
+    padding: 0.5rem 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Dashboard cards */
+.card .fa-4x {
+    opacity: 0.8;
+}
+
+.card:hover .fa-4x {
+    opacity: 1;
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+}
+
+/* Footer */
+footer {
+    margin-top: 3rem;
+    font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .display-5 {
+        font-size: 1.8rem;
+    }
+}

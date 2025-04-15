@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1 class="display-5">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </h1>
+        <p class="lead">Welcome to Sahara Readymade Store Management System</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body d-flex flex-column align-items-center">
+                <i class="fas fa-tags fa-4x mb-3"></i>
+                <h5 class="card-title">Categories</h5>
+                <a href="{{ url_for('categories') }}" class="btn btn-light mt-auto">Manage</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body d-flex flex-column align-items-center">
+                <i class="fas fa-box fa-4x mb-3"></i>
+                <h5 class="card-title">Products</h5>
+                <a href="{{ url_for('products') }}" class="btn btn-light mt-auto">Manage</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-info h-100">
+            <div class="card-body d-flex flex-column align-items-center">
+                <i class="fas fa-users fa-4x mb-3"></i>
+                <h5 class="card-title">Customers</h5>
+                <a href="{{ url_for('customers') }}" class="btn btn-light mt-auto">Manage</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-warning h-100">
+            <div class="card-body d-flex flex-column align-items-center">
+                <i class="fas fa-clipboard-list fa-4x mb-3"></i>
+                <h5 class="card-title">Orders</h5>
+                <a href="{{ url_for('orders') }}" class="btn btn-light mt-auto">View</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-cart-plus"></i> Quick Order
+            </div>
+            <div class="card-body">
+                <p>Create a new order quickly</p>
+                <a href="{{ url_for('create_order_form') }}" class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i> New Order
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-user-plus"></i> Quick Customer
+            </div>
+            <div class="card-body">
+                <p>Add a new customer quickly</p>
+                <a href="{{ url_for('customers') }}" class="btn btn-success">
+                    <i class="fas fa-plus-circle"></i> New Customer
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
