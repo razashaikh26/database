@@ -635,5 +635,38 @@ def view_customer(customer_id):
     
     return render_template('view_customer.html', customer=customer, orders=orders)
 
+@app.route('/orders/print_bill/<int:order_id>')
+def print_bill(order_id):
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    db = SaharaReadymadeDB()
+    
+    # Get order information
+    order = db.fetch_data("SELECT * FROM Orders WHERE order_id = %s", (order_id,))[0]
+    
+    # Get customer information
+    customer = db.fetch_data("SELECT * FROM Customers WHERE customer_id = %s", (order['customer_id'],))[0]
+    
+    # Get order details with product information
+    order_details = db.fetch_data("""
+    SELECT p.product_name, od.quantity, od.price_at_time, 
+           (od.quantity * od.price_at_time) as subtotal
+    FROM OrderDetails od
+    JOIN Products p ON od.product_id = p.product_id
+    WHERE od.order_id = %s
+    """, (order_id,))
+    
+    db.close()
+    
+    # Get current date and time for the bill
+    bill_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    return render_template('print_bill.html', 
+                          order=order, 
+                          customer=customer, 
+                          order_details=order_details,
+                          bill_date=bill_date)
+
 if __name__ == '__main__':
     app.run(debug=True)
