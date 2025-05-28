@@ -161,6 +161,8 @@ def add_product():
     
     return redirect(url_for('products'))
 
+
+
 # Customers routes
 @app.route('/customers')
 def customers():
@@ -444,6 +446,194 @@ def delete_order(order_id):
         db.close()
     
     return redirect(url_for('orders'))
+
+@app.route('/products/edit/<int:product_id>', methods=['GET', 'POST'])
+def edit_product(product_id):
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    db = SaharaReadymadeDB()
+    
+    if request.method == 'POST':
+        product_name = request.form.get('product_name')
+        category_id = request.form.get('category_id')
+        price = request.form.get('price')
+        stock_quantity = request.form.get('stock_quantity')
+        
+        if product_name and category_id:
+            query = """
+            UPDATE Products 
+            SET product_name = %s, category_id = %s, price = %s, stock_quantity = %s
+            WHERE product_id = %s
+            """
+            success = db.execute_query(query, (product_name, category_id, price, stock_quantity, product_id))
+            
+            if success:
+                flash('Product updated successfully!', 'success')
+            else:
+                flash('Failed to update product!', 'danger')
+            
+            db.close()
+            return redirect(url_for('products'))
+    
+    # GET request - show edit form
+    product = db.fetch_data("SELECT * FROM Products WHERE product_id = %s", (product_id,))[0]
+    categories = db.fetch_data("SELECT * FROM Categories")
+    db.close()
+    
+    return render_template('edit_product.html', product=product, categories=categories)
+
+@app.route('/categories/edit/<int:category_id>', methods=['GET', 'POST'])
+def edit_category(category_id):
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    db = SaharaReadymadeDB()
+    
+    if request.method == 'POST':
+        category_name = request.form.get('category_name')
+        description = request.form.get('description')
+        
+        if category_name:
+            query = "UPDATE Categories SET category_name = %s, description = %s WHERE category_id = %s"
+            success = db.execute_query(query, (category_name, description, category_id))
+            
+            if success:
+                flash('Category updated successfully!', 'success')
+            else:
+                flash('Failed to update category!', 'danger')
+            
+            db.close()
+            return redirect(url_for('categories'))
+    
+    # GET request - show edit form
+    category = db.fetch_data("SELECT * FROM Categories WHERE category_id = %s", (category_id,))[0]
+    db.close()
+    
+    return render_template('edit_category.html', category=category)
+
+@app.route('/customers/edit/<int:customer_id>', methods=['GET', 'POST'])
+def edit_customer(customer_id):
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    db = SaharaReadymadeDB()
+    
+    if request.method == 'POST':
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        phone_number = request.form.get('phone_number')
+        email = request.form.get('email')
+        address = request.form.get('address')
+        
+        if first_name and last_name:
+            query = """
+            UPDATE Customers 
+            SET first_name = %s, last_name = %s, phone_number = %s, email = %s, address = %s
+            WHERE customer_id = %s
+            """
+            success = db.execute_query(query, (first_name, last_name, phone_number, email, address, customer_id))
+            
+            if success:
+                flash('Customer updated successfully!', 'success')
+            else:
+                flash('Failed to update customer!', 'danger')
+            
+            db.close()
+            return redirect(url_for('customers'))
+    
+    # GET request - show edit form
+    customer = db.fetch_data("SELECT * FROM Customers WHERE customer_id = %s", (customer_id,))[0]
+    db.close()
+    
+    return render_template('edit_customer.html', customer=customer)
+
+@app.route('/orders/edit/<int:order_id>', methods=['GET', 'POST'])
+def edit_order(order_id):
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    db = SaharaReadymadeDB()
+    
+    if request.method == 'POST':
+        status = request.form.get('status')
+        
+        query = "UPDATE Orders SET status = %s WHERE order_id = %s"
+        success = db.execute_query(query, (status, order_id))
+        
+        if success:
+            flash('Order updated successfully!', 'success')
+        else:
+            flash('Failed to update order!', 'danger')
+        
+        db.close()
+        return redirect(url_for('orders'))
+    
+    # GET request - show edit form
+    order = db.fetch_data("""
+    SELECT o.*, CONCAT(c.first_name, ' ', c.last_name) as customer_name
+    FROM Orders o
+    JOIN Customers c ON o.customer_id = c.customer_id
+    WHERE o.order_id = %s
+    """, (order_id,))[0]
+    
+    order_details = db.fetch_data("""
+    SELECT od.*, p.product_name
+    FROM OrderDetails od
+    JOIN Products p ON od.product_id = p.product_id
+    WHERE od.order_id = %s
+    """, (order_id,))
+    
+    db.close()
+    
+    return render_template('edit_order.html', order=order, order_details=order_details)
+
+# View routes for categories, products, and customers
+
+@app.route('/categories/view/<int:category_id>')
+def view_category(category_id):
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    db = SaharaReadymadeDB()
+    category = db.fetch_data("SELECT * FROM Categories WHERE category_id = %s", (category_id,))[0]
+    products = db.fetch_data("SELECT * FROM Products WHERE category_id = %s", (category_id,))
+    db.close()
+    
+    return render_template('view_category.html', category=category, products=products)
+
+@app.route('/products/view/<int:product_id>')
+def view_product(product_id):
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    db = SaharaReadymadeDB()
+    product = db.fetch_data("""
+        SELECT p.*, c.category_name 
+        FROM Products p
+        JOIN Categories c ON p.category_id = c.category_id
+        WHERE p.product_id = %s
+    """, (product_id,))[0]
+    db.close()
+    
+    return render_template('view_product.html', product=product)
+
+@app.route('/customers/view/<int:customer_id>')
+def view_customer(customer_id):
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    db = SaharaReadymadeDB()
+    customer = db.fetch_data("SELECT * FROM Customers WHERE customer_id = %s", (customer_id,))[0]
+    orders = db.fetch_data("""
+        SELECT o.order_id, o.order_date, o.total_amount, o.status
+        FROM Orders o
+        WHERE o.customer_id = %s
+        ORDER BY o.order_date DESC
+    """, (customer_id,))
+    db.close()
+    
+    return render_template('view_customer.html', customer=customer, orders=orders)
 
 if __name__ == '__main__':
     app.run(debug=True)

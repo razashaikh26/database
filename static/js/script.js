@@ -19,5 +19,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Confirm delete actions
 function confirmDelete(itemType, itemId) {
-    return confirm(`Are you sure you want to delete this ${itemType}? This action cannot be undone.`);
+    return confirm(`Are you sure you want to delete this ${itemType} (ID: ${itemId})? This action cannot be undone.`);
 }

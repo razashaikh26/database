@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5><i class="fas fa-box"></i> Product Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>{{ product.product_name }}</h3>
+                    <p><strong>Category:</strong> {{ product.category_name }}</p>
+                    <p><strong>Price:</strong> ₹{{ product.price }}</p>
+                    <p><strong>Stock:</strong> 
+                        {% if product.stock_quantity > 10 %}
+                        <span class="badge bg-success">{{ product.stock_quantity }}</span>
+                        {% elif product.stock_quantity > 0 %}
+                        <span class="badge bg-warning">{{ product.stock_quantity }}</span>
+                        {% else %}
+                        <span class="badge bg-danger">Out of stock</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{{ url_for('edit_product', product_id=product.product_id) }}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{{ url_for('products') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Products
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
